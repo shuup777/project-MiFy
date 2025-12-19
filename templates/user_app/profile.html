@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-5 min-vh-100 main-gradient">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-5">
+                <div class="card border-0 shadow-lg profile-card backdrop-blur">
+                    <div class="card-header bg-transparent border-0 pt-5 text-center">
+                        <div class="position-relative d-inline-block mb-3">
+                            {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}" class="rounded-circle border border-4 border-white shadow-sm profile-img" alt="Profile">
+                            {% else %}
+                                <div class="rounded-circle bg-white bg-opacity-50 d-flex align-items-center justify-content-center profile-img shadow-sm">
+                                    <i class="bi bi-person-fill display-2 text-white"></i>
+                                </div>
+                            {% endif %}
+                            <div class="position-absolute bottom-0 end-0">
+                                <span class="badge bg-success rounded-pill border border-2 border-white px-3 py-2 shadow-sm">User</span>
+                            </div>
+                        </div>
+                        <h2 class="fw-bold text-white mb-0">{{ user.username }}</h2>
+                        <p class="text-white-50 small">{{ user.email }}</p>
+                    </div>
+
+                    <div class="card-body px-4 pb-5">
+                        <form method="POST" enctype="multipart/form-data" class="profile-form">
+                            {% csrf_token %}
+                            
+                            <div class="mb-4">
+                                <h5 class="text-white fw-bold mb-3 border-bottom border-white border-opacity-25 pb-2">
+                                    <i class="bi bi-gear-wide-connected me-2"></i>Pengaturan Akun
+                                </h5>
+                                
+                                {% for field in form %}
+                                <div class="mb-3">
+                                    <label class="form-label text-white small fw-bold">{{ field.label }}</label>
+                                    <div class="input-group custom-input-group">
+                                        {{ field }}
+                                    </div>
+                                    {% if field.errors %}
+                                        <div class="text-danger x-small mt-1 bg-white bg-opacity-75 rounded px-2">{{ field.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success rounded-pill py-2 fw-bold shadow">
+                                    <i class="bi bi-cloud-check-fill me-2"></i>Simpan Perubahan
+                                </button>
+                                <a href="{% url 'user:home' %}" class="btn btn-outline-light rounded-pill py-2 fw-bold">
+                                    <i class="bi bi-arrow-left me-2"></i>Kembali
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Gradient yang sama dengan Admin & Home */
+    .main-gradient {
+        background: linear-gradient(135deg, #afd7c0, #b4d6f3);
+        background-attachment: fixed;
+    }
+
+    /* Glassmorphism Card */
+    .profile-card {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 30px;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+    }
+
+    /* Image Styling */
+    .profile-img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    .profile-img:hover {
+        transform: scale(1.05);
+    }
+
+    /* Custom Form Styling */
+    .profile-form input, 
+    .profile-form textarea, 
+    .profile-form select {
+        background-color: rgba(255, 255, 255, 0.5) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        border-radius: 12px !important;
+        padding: 10px 15px !important;
+        color: #333 !important;
+        font-weight: 500;
+        width: 100%;
+    }
+
+    .profile-form input:focus {
+        background-color: rgba(255, 255, 255, 0.8) !important;
+        box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.2) !important;
+        border-color: #198754 !important;
+        outline: none;
+    }
+
+    /* Utility */
+    .x-small { font-size: 0.75rem; }
+    .backdrop-blur { backdrop-filter: blur(10px); }
+</style>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="fw-bold mb-4 text-center">💳 Detail Langganan Saya</h2>
+            
+            <div class="card border-0 shadow-sm" style="border-radius: 25px; overflow: hidden;">
+                <div class="p-4 {% if subscription and subscription.is_active %}bg-success{% else %}bg-secondary{% endif %} text-white text-center">
+                    <h4 class="mb-0 fw-bold">
+                        {% if subscription and subscription.is_active %}
+                            STATUS: AKTIF ✅
+                        {% else %}
+                            STATUS: TIDAK AKTIF / EXPIRED ❌
+                        {% endif %}
+                    </h4>
+                </div>
+
+                <div class="card-body p-5">
+                    {% if subscription %}
+                        <div class="row align-items-center mb-4">
+                            <div class="col-6">
+                                <p class="text-muted mb-1 text-uppercase small fw-bold">Paket Saat Ini</p>
+                                <h3 class="text-dark fw-bold">{{ subscription.plan.name }}</h3>
+                            </div>
+                            <div class="col-6 text-end">
+                                <p class="text-muted mb-1 text-uppercase small fw-bold">Berakhir Pada</p>
+                                <h5 class="fw-bold">{{ subscription.end_date|date:"d F Y" }}</h5>
+                            </div>
+                        </div>
+
+                        <hr class="text-muted opacity-25">
+
+                        <div class="my-4">
+                            <p class="fw-bold mb-3">Fitur yang Anda dapatkan:</p>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">✨ Audio Kualitas: <b>{{ subscription.plan.audio_quality }}</b></li>
+                                <li class="mb-2">🚫 Bebas Iklan: <b>{% if subscription.plan.has_ads %}Tidak{% else %}Ya{% endif %}</b></li>
+                            </ul>
+                        </div>
+
+                        {% if not subscription.is_active or subscription.end_date < timezone.now %}
+                            <div class="alert alert-warning border-0 rounded-pill text-center">
+                                Masa berlaku paket Anda telah habis. Silakan perbarui paket Anda.
+                            </div>
+                        {% endif %}
+
+                    {% else %}
+                        <div class="text-center py-4">
+                            <p class="text-muted">Anda belum memiliki paket langganan aktif.</p>
+                            <a href="{% url 'finance:plan_list' %}" class="btn btn-primary rounded-pill px-4 fw-bold">
+                                Lihat Pilihan Paket
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="card-footer bg-white border-0 p-4 text-center">
+                    <a href="{% url 'user:home' %}" class="btn btn-outline-dark rounded-pill px-4">
+                        Kembali ke Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

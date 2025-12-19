@@ -1,0 +1,79 @@
+{% extends 'artists/base_artist.html' %}
+{% load static %}
+
+{% block title %}Upload Lagu Baru{% endblock title %}
+
+{% block content %}
+
+<h1 class="page-title">Upload Lagu Baru</h1>
+
+<div class="form-wrapper">
+    <form method="post" enctype="multipart/form-data" class="upload-form">
+        {% csrf_token %}
+        <p class="page-subtitle" style="text-align: center;">
+            Unggah karya musikmu dan mulai menjualnya di platform
+        </p>
+        {% for field in form %}
+        <div class="form-label">
+            <label>{{ field.label }}</label>
+
+            {% if field.field.widget.input_type == "file" %}
+            <label class="custom-file-upload">
+                {% if "cover" in field.name %}
+                <i class="fas fa-image"></i>
+                <span class="file-label">Pilih cover lagu</span>
+                {% else %}
+                <i class="fas fa-music"></i>
+                <span class="file-label">Pilih file audio</span>
+                {% endif %}
+                {{ field }}
+            </label>
+
+            {% else %}
+            {{ field }}
+            {% endif %}
+
+            {% if field.help_text %}
+            <small class="form-help">{{ field.help_text }}</small>
+            {% endif %}
+
+            {% for error in field.errors %}
+            <div class="form-error">{{ error }}</div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">
+                <i class="fas fa-upload"></i>
+                Unggah Lagu
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const fileInputs = document.querySelectorAll(
+            'input[type="file"]'
+        );
+
+        fileInputs.forEach(input => {
+            input.addEventListener("change", function () {
+                if (this.files && this.files.length > 0) {
+                    const fileName = this.files[0].name;
+
+                    const label = this.closest("label");
+                    const textSpan = label.querySelector(".file-label");
+
+                    if (textSpan) {
+                        textSpan.textContent = fileName;
+                    }
+                }
+            });
+        });
+    });
+</script>

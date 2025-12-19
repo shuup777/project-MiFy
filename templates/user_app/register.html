@@ -1,39 +1,62 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Register - Mify{% endblock %}
-
-{% block extra_css %}
-  <link href="{% static 'css/user.css' %}" rel="stylesheet">
-{% endblock %}
-
 {% block content %}
-<section class="hero-section text-center auth-hero">
-  <div class="container">
-    <div class="auth-card mx-auto">
-      <h2 class="mb-4">Create an account</h2>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card bg-dark text-white border-0 shadow-lg" style="border-radius: 20px;">
+                <div class="card-body p-5 text-center">
+                    <h2 class="fw-bold mb-4">Profil Saya</h2>
+                    
+                    <div class="mb-4">
+                        {% if profile.profile_picture %}
+                            <img src="{{ profile.profile_picture.url }}" class="rounded-circle border border-success border-4" style="width: 150px; height: 150px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 150px; height: 150px;">
+                                <i class="bi bi-person-fill display-1 text-white-50"></i>
+                            </div>
+                        {% endif %}
+                    </div>
 
-      <form method="post" novalidate>
-        {% csrf_token %}
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="text-start mb-4">
+                            {% for field in form %}
+                                <div class="mb-3">
+                                    <label class="form-label small text-white-50">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <div class="text-danger small">{{ field.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
 
-        {% for field in form.visible_fields %}
-          <div class="mb-3">
-            <label class="form-label">{{ field.label }}</label>
-            {{ field }}
-            {% if field.help_text %}
-              <div class="form-text">{{ field.help_text }}</div>
-            {% endif %}
-            {% if field.errors %}
-              <div class="text-danger small">{{ field.errors|striptags }}</div>
-            {% endif %}
-          </div>
-        {% endfor %}
-
-        <button type="submit" class="btn btn-primary">Register</button>
-      </form>
-
-      <p class="mt-3">Already have an account? <a href="{% url 'user:login' %}">Login here</a>.</p>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success rounded-pill py-2 fw-bold">Simpan Perubahan</button>
+                            <a href="{% url 'user:home' %}" class="btn btn-outline-secondary rounded-pill py-2">Kembali</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</section>
+</div>
+
+<style>
+    /* Menata input form agar terlihat modern di mode gelap */
+    input, textarea, select {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        color: white !important;
+        border-radius: 10px !important;
+        padding: 10px 15px !important;
+    }
+    input:focus {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+        box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25) !important;
+    }
+</style>
 {% endblock %}

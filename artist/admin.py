@@ -17,4 +17,4 @@ class SongAdmin(admin.ModelAdmin):
 class SongPurchaseAdmin(admin.ModelAdmin):
     list_display = ("song", "buyer", "price_paid", "purchase_date")
     list_filter = ("purchase_date", "song__artist")
-    search_fields = ("buyer_username", "song_title")
+    search_fields = ("buyer__username", "song__title")

@@ -1,0 +1,120 @@
+{% extends 'artists/base_artist.html' %}
+{% load static %}
+
+{% block title %}Edit Lagu: {{ song.title }}{% endblock title %}
+
+{% block content %}
+
+<h1 class="page-title">Edit lagu : "{{ song.title }}"</h1>
+
+<div class="edit-song-wrapper">
+    <div class="edit-song-form">
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- FORM FIELDS -->
+            <div class="form-fields-grid" style="display: grid; gap: 24px;">
+
+                <!-- TITLE FIELD -->
+                <div class="form-group">
+                    <label class="form-label">Judul Lagu</label>
+                    {{ form.title }}
+                    {% for error in form.title.errors %}
+                    <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- AUDIO FILE -->
+                <div class="form-group">
+
+                    <label>File Lagu Saat Ini</label>
+
+                    {% if song.audio_file %}
+                    <div class="form-group" style="display: flex; justify-content: center; align-items: center;">
+                        <audio controls>
+                            <source src="{{ song.audio_file.url }}">
+                            Browser tidak mendukung audio.
+                        </audio>
+                    </div>
+                    {% endif %}
+
+
+                    <label class="text-muted">Ganti File Lagu</label>
+                    <input type="file" name="audio_file" accept=".mp3,.m4a"
+                        class="form-control bg-dark text-light border-0">
+
+                    {% if form.audio_file.errors %}
+                    <div class="form-error">
+                        <i class="fas fa-music"></i>
+                        {{ form.audio_file.errors.0 }}
+                    </div>
+                    {% endif %}
+
+                    <small class="form-help">
+                        Upload file lagu baru untuk mengganti (MP3 / M4A)
+                    </small>
+                </div>
+
+                <!-- COVER IMAGE -->
+                <div class="form-group">
+                    <label>Cover Lagu Saat Ini</label>
+
+                    {% if song.cover_image %}
+                    <div class="current-cover">
+                        <img src="{{ song.cover_image.url }}" alt="{{ song.title }} cover">
+                        <small>Unggah file baru untuk mengganti cover</small>
+                    </div>
+                    {% endif %}
+
+                    {{ form.cover_image }}
+
+                    {% if form.cover_image.errors %}
+                    <div class="form-error">
+                        {{ form.cover_image.errors.0 }}
+                    </div>
+                    {% endif %}
+
+
+                    <small class="form-help">
+                        Upload cover lagu (JPG / PNG / WEBP)
+                    </small>
+                </div>
+
+                <!-- PRICE FIELD -->
+                <div class="form-group">
+                    <label class="form-label">Harga (Rp)</label>
+                    {{ form.price }}
+                    {% for error in form.price.errors %}
+                    <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="edit-song-actions">
+                    <button type="submit" class="btn btn-primary">
+                        Simpan Perubahan
+                    </button>
+
+                    <a href="{% url 'artists:dashboard' %}" class="btn btn-link-custom">
+                        Batal
+                    </a>
+                </div>
+
+            </div> <!-- ✅ form-fields-grid ditutup -->
+
+        </form>
+
+        <hr class="edit-song-divider">
+
+        <div class="delete-song-section">
+            <p>Ingin menghapus lagu ini?</p>
+            <a href="{% url 'artists:delete' song.id %}" class="btn btn-danger">
+                Hapus Lagu Permanen
+            </a>
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}

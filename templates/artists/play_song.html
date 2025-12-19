@@ -1,0 +1,42 @@
+{% extends 'artists/base_artist.html' %}
+{% load static %}
+
+{% block title %}Play: {{ song.title }}{% endblock title %}
+
+{% block content %}
+
+<h1 class="page-title">Play : "{{ song.title }}"</h1>
+
+<div class="edit-song-wrapper">
+    <div class="edit-song-form">
+
+
+        <!-- COVER IMAGE -->
+        <div class="form-group">
+            {% if song.cover_image %}
+            <div class="current-cover">
+                <label>{{ song.title }}</label>
+                <img src="{{ song.cover_image.url }}" alt="{{ song.title }} cover">
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- AUDIO FILE -->
+        <div class="form-group" style="display: flex; justify-content: center; align-items: center;">
+
+            {% if song.audio_file %}
+            <div class="current-file" style="text-align: center;">
+                <audio controls style="display: block; margin: 0 auto;">
+                    <source src="{{ song.audio_file.url }}">
+                    Browser tidak mendukung audio.
+                </audio>
+            </div>
+            {% endif %}
+        </div>
+
+    </div> <!-- ✅ form-fields-grid ditutup -->
+
+</div>
+</div>
+
+{% endblock content %}

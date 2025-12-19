@@ -1,0 +1,138 @@
+{% extends 'artists/base_artist.html' %}
+{% load static %}
+
+{% block title %}Edit Profil - {{ artist.stage_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/artist_profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+
+    <!-- HEADER -->
+    <div class="profile-header-section">
+        <!-- AVATAR -->
+        <div class="profile-avatar">
+            <div class="avatar-circle">
+                {% if artist.photo %}
+                <img src="{{ artist.photo.url }}" alt="Avatar {{ artist.stage_name }}" class="avatar-img">
+                {% else %}
+                <i class="fas fa-user"></i>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="profile-info">
+            <h1 class="artist-name">Edit Profil</h1>
+            <p class="artist-email">{{ artist.user.email }}</p>
+            <div class="profile-meta">
+                <span class="meta-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    Bergabung {{ artist.created_at|date:"d M Y" }}
+                </span>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <a href="{% url 'artists:profile_artist' %}" class="btn btn-primary">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </a>
+        </div>
+    </div>
+
+    <!-- CONTENT GRID -->
+    <div class="profile-content-grid">
+
+        <!-- MAIN CONTENT -->
+        <div class="profile-main-content">
+
+            <div class="profile-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-edit"></i> Informasi Profil</h2>
+                </div>
+
+                <div class="card-content">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group image-group">
+
+                            <div class="image-preview">
+
+                                <!-- PROFILE IMAGE -->
+                                <div class="form-group image-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-image"></i> Gambar Profil
+                                    </label>
+
+                                    <div class="image-upload-wrapper">
+                                        <div class="avatar-circle large">
+                                            {% if artist.photo %}
+                                            <img src="{{ artist.photo.url }}" class="avatar-img" alt="Foto Profil">
+                                            {% else %}
+                                            <i class="fas fa-user"></i>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="upload-actions">
+                                            <input type="file" id="id_photo" name="photo" accept="image/png, image/jpeg"
+                                                hidden> <small class="form-hint">
+                                                JPG / PNG • Maks 2MB
+                                            </small>
+
+                                            {% if form.photo.errors %}
+                                            <div class="form-error">
+                                                {{ form.photo.errors.0 }}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {{ form.profile_image }}
+                            </div>
+
+                            {% if form.profile_image.errors %}
+                            <div class="form-error">{{ form.profile_image.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- STAGE NAME -->
+                        <div class="form-group">
+                            <label for="{{ form.stage_name.id_for_label }}">
+                                <i class="fas fa-user"></i> Nama Panggung
+                            </label>
+                            {{ form.stage_name }}
+                            {% if form.stage_name.errors %}
+                            <div class="form-error">{{ form.stage_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- BIO -->
+                        <div class="form-group">
+                            <label for="{{ form.bio.id_for_label }}">
+                                <i class="fas fa-info-circle"></i> Bio
+                            </label>
+                            {{ form.bio }}
+                            {% if form.bio.errors %}
+                            <div class="form-error">{{ form.bio.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- ACTIONS -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Simpan
+                            </button>
+                            <a href="{% url 'artists:profile_artist' %}" class="btn btn-link-custom">
+                                Batal
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    body { background-color: #121212; color: white; }
+    .song-card {
+        background-color: #181818;
+        border: 1px solid #282828;
+        transition: 0.3s;
+        border-radius: 10px;
+    }
+    .song-card:hover { background-color: #282828; }
+    .btn-buy { background-color: #1DB954; color: white; border-radius: 20px; font-weight: bold; }
+</style>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Jelajahi Lagu</h2>
+    <div class="row">
+        {% for song in songs %}
+        <div class="col-md-3 mb-4">
+            <div class="card song-card h-100 p-3">
+                {% if song.cover_image %}
+                    <img src="{{ song.cover_image.url }}" class="card-img-top rounded" alt="cover">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ song.title }}</h5>
+                    <p class="text-muted small">{{ song.artist.stage_name }}</p>
+                    <p class="text-success fw-bold">Rp {{ song.price }}</p>
+                    
+                    <a href="{% url 'finance:checkout_song' song.id %}" class="btn btn-buy w-100">
+                        Beli Sekarang
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p class="text-muted">Belum ada lagu yang tersedia.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,10 +1,63 @@
-{% extends "base.html" %}
-{% block title %}Artists Dashboard{% endblock %}
+{% extends 'artists/base_artist.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}Dashboard - {{ artist.stage_name }}{% endblock title %}
 
 {% block content %}
-  <div class="py-4">
-    <h1>Artists Dashboard</h1>
-    <p class="lead">Overview of your artists and songs (placeholder).</p>
-    <a class="btn btn-outline-primary" href="{% url 'artists:dashboard' %}">Refresh</a>
-  </div>
-{% endblock %}
+    <h1>Selamat Datang, {{ artist.stage_name }}</h1>
+
+    <div class="card-grid">
+        <div class="card">
+            <h3>Total Plays</h3>
+            <p class="metric">{{ total_plays|intcomma }}</p>
+        </div>
+        <div class="card">
+            <h3>Total Downloads</h3>
+            <p class="metric">{{ total_purchases|intcomma }}</p>
+        </div>
+        <div class="card">
+            <h3>Total Income</h3>
+            <p class="metric">Rp {{ total_income|intcomma }}</p>
+        </div>
+    </div>
+
+    <h2>Lagu Anda</h2>
+    {% if songs %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Judul</th>
+                    <th>Harga</th>
+                    <th>Plays</th>
+                    <th>Purchases</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for song in songs|slice:":5" %}
+                <tr>
+                    <td>{{ song.title }}</td>
+                    <td>Rp {{ song.price|intcomma }}</td>
+                    <td>{{ song.play_count|intcomma }}</td>
+                    <td>{{ song.purchase_count|intcomma }}</td>
+                    <td>
+                        <a href="{% url 'artists:edit' song.id %}" class="btn-primary" style="padding: 5px 10px; font-size: 0.8em;">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if songs|length > 5 %}
+        <p style="text-align: right; margin-top: 15px;">
+            <a href="{% url 'artists:dashboard' %}" style="color: var(--primary-green);">Lihat Semua Lagu...</a>
+        </p>
+        {% endif %}
+    {% else %}
+        <div style="text-align: center; padding: 40px; border: 1px dashed var(--border-color); border-radius: 8px;">
+            <p style="color: var(--text-light);">Anda belum mengunggah lagu. Mulai dapatkan pendengar sekarang!</p>
+            <a href="{% url 'artists:upload_song' %}" class="btn-primary"><i class="fas fa-plus"></i> Upload Lagu Pertama Anda</a>
+        </div>
+    {% endif %}
+
+{% endblock content %}

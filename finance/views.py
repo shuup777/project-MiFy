@@ -1,114 +1,84 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView
-from django.utils import timezone
+from django.contrib import messages
+from django.db.models import Sum
 from django.core.paginator import Paginator
-from .models import SubscriptionPlan, Subscription, Transaction
-from decimal import Decimal
-import datetime 
-
-
-class PlanListView(ListView):
-    model = SubscriptionPlan
-    template_name = 'finance/plan_list.html'
-    context_object_name = 'object_list'
-    ordering = ['price']
-plan_list = PlanListView.as_view()
-
+from .models import Payment
+from artist.models import Song, SongPurchase 
 
 @login_required
-def checkout(request, plan_id):
-    plan = get_object_or_404(SubscriptionPlan, id=plan_id)
+def checkout_song(request, song_id):
+    """Halaman konfirmasi dan eksekusi pembayaran lagu"""
+    song = get_object_or_404(Song, id=song_id)
     
-    if request.method == 'POST':
-        DURATION = 30 
-        
-        subscription, created = Subscription.objects.get_or_create(
+    # 1. Validasi: Cek apakah user sudah memiliki lagu ini
+    if SongPurchase.objects.filter(buyer=request.user, song=song).exists():
+        messages.info(request, "Lagu ini sudah ada di koleksi Anda.")
+        return redirect('user:library')
+
+    if request.method == "POST":
+        # A. Simpan transaksi di modul Finance (untuk Laporan Admin)
+        Payment.objects.create(
             user=request.user,
-            defaults={
-                'plan': plan, 
-                'end_date': timezone.now() + datetime.timedelta(days=DURATION)
-            }
-        )
-        
-        if not created:
-            subscription.plan = plan
-            subscription.end_date = timezone.now() + datetime.timedelta(days=DURATION)
-            subscription.is_active = True
-            subscription.save()
-            
-        # 2. Catat Transaksi
-        Transaction.objects.create(
-            user=request.user,
-            plan=plan,
-            amount=plan.price,
-            status='SUCCESS' 
+            song=song,
+            amount=song.price,
+            status='SUCCESS'
         )
 
-        return redirect('finance:payment_success')
+        # B. Simpan di modul Artist (untuk Koleksi User)
+        # Pastikan nama field 'price_at_purchase' sesuai dengan model SongPurchase Anda
+        SongPurchase.objects.create(
+           song=song,
+           buyer=request.user,
+           price_paid=song.price  # Ubah ke price_paid
+        )
 
-    context = {'plan': plan}
-    return render(request, 'finance/checkout.html', context)
+        # C. Update counter pembelian (opsional, jika fungsi ada di model Song)
+        if hasattr(song, 'increment_purchase'):
+            song.increment_purchase()
+        
+        messages.success(request, f"Pembayaran berhasil! Lagu {song.title} kini ada di koleksi Anda.")
+        return render(request, 'finance/success.html', {'song': song})
 
-# --- View Sukses Pembayaran ---
-@login_required
-def payment_success(request):
-    return render(request, 'finance/payment_success.html')
+    # Tampilkan halaman konfirmasi (GET)
+    return render(request, 'finance/checkout.html', {'song': song})
 
-# --- View Detail Langganan ---
-@login_required
-def subscription_detail(request):
-    try:
-        subscription = request.user.subscription 
-        if subscription.is_expired():
-             subscription.is_active = False
-             subscription.save()
-    except Subscription.DoesNotExist:
-        subscription = None 
-
-    context = {'subscription': subscription}
-    return render(request, 'finance/subscription_detail.html', context)
-
-# --- View Laporan Keuangan ---
 @login_required
 def report(request):
-    if not request.user.is_superuser and not request.user.is_staff:
-        return redirect('plan_list') 
-    
-    transactions = Transaction.objects.all().order_by('-transaction_date')
+    """Laporan Keuangan Konsolidasi untuk Admin"""
+    if not request.user.is_staff:
+        messages.error(request, "Akses ditolak. Anda bukan admin.")
+        return redirect('user:home')
 
-    status_filter = request.GET.get('status')
-    min_amount_str = request.GET.get('min_amount')
-    min_amount = None
-
-    if status_filter:
-        transactions = transactions.filter(status=status_filter)
-    
-    if min_amount_str:
-        try:
-            min_amount = Decimal(min_amount_str)
-            transactions = transactions.filter(amount__gte=min_amount)
-        except:
-            pass 
-    
-
-    successful_transactions = Transaction.objects.filter(status='SUCCESS')
-    total_revenue = sum(t.amount for t in successful_transactions)
-    pelanggan_aktif = Subscription.objects.filter(is_active=True).count() 
-    total_transaksi = Transaction.objects.all().count()
-
-    paginator = Paginator(transactions, 20) 
-    page_number = request.GET.get('page')
-    transaksi_halaman = paginator.get_page(page_number)
+    all_payments = Payment.objects.all().select_related('user', 'song').order_by('-transaction_date')
+    total_revenue = all_payments.aggregate(Sum('amount'))['amount__sum'] or 0
     
     context = {
-        'transaksi_halaman': transaksi_halaman,
-        'total_pendapatan': total_revenue, 
-        'pelanggan_aktif': pelanggan_aktif, 
-        'total_transaksi': total_transaksi, 
+        'payments': all_payments,
+        'total_revenue': total_revenue,
+    }
+    return render(request, 'finance/report.html', context)
 
-        'status_choices': Transaction.STATUS_CHOICES,
-        'status_filter': status_filter,
-        'min_amount': min_amount,
+@login_required
+def payment_history(request):
+    """Riwayat belanja milik user pribadi"""
+    payments = Payment.objects.filter(user=request.user).select_related('song', 'song__artist').order_by('-transaction_date')
+    return render(request, 'finance/history.html', {'payments': payments})
+
+
+def report(request):
+    all_payments = Payment.objects.all().order_by('-id')
+    
+    # Hitung total revenue
+    total_revenue = sum(p.amount for p in all_payments)
+
+    # Tambahkan Paginator: 10 transaksi per halaman
+    paginator = Paginator(all_payments, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'payments': page_obj, # Sekarang 'payments' berisi 10 data per halaman
+        'total_revenue': total_revenue,
     }
     return render(request, 'finance/report.html', context)

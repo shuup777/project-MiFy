@@ -1,0 +1,98 @@
+{% extends 'artists/base_artist.html' %}
+{% load static %}
+
+{% block title %}Profil Artis - {{ artist.stage_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/artist_profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+
+    <!-- Profile Header -->
+    <div class="profile-header-section">
+        <!-- AVATAR -->
+        <div class="profile-avatar">
+            <div class="avatar-circle">
+                {% if artist.photo %}
+                <img src="{{ artist.photo.url }}" alt="Avatar {{ artist.stage_name }}" class="avatar-img">
+                {% else %}
+                <i class="fas fa-user"></i>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="profile-info">
+            <h1 class="artist-name">{{ artist.stage_name }}</h1>
+            <p class="artist-email">{{ artist.user.email }}</p>
+            <div class="profile-meta">
+                <span class="meta-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    Bergabung {{ artist.created_at|date:"d M Y" }}
+                </span>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <a href="{% url 'artists:edit_profile' %}" class="btn btn-primary">
+                <i class="fas fa-edit"></i> Edit Profil
+            </a>
+        </div>
+    </div>
+
+    <!-- CONTENT GRID -->
+    <div class="profile-content-grid">
+
+        <!-- LEFT -->
+        <div class="profile-main-content">
+
+            <!-- BIO -->
+            <div class="profile-card bio-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-info-circle"></i> Tentang Artis</h2>
+                </div>
+                <div class="card-content">
+                    {% if artist.bio %}
+                    <p class="bio-text">{{ artist.bio }}</p>
+                    {% else %}
+                    <div class="no-bio-placeholder">
+                        <i class="fas fa-user-edit"></i>
+                        <p>Belum ada bio yang ditambahkan.</p>
+                        <small>Klik "Edit Profil" untuk menambahkan deskripsi.</small>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- STATS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-music"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-number">{{ total_songs }}</div>
+                        <div class="stat-label">Lagu</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-play"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-number">{{ total_plays }}</div>
+                        <div class="stat-label">Total Plays</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-number">{{ total_purchases }}</div>
+                        <div class="stat-label">Penjualan</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

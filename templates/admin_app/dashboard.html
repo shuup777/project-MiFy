@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold text-white shadow-sm d-inline-block px-4 py-2 rounded-pill bg-white bg-opacity-25">
+            Admin Dashboard
+        </h1>
+        <p class="lead text-white mt-3">Welcome back, <span class="fw-bold text-dark">{{ user.username }}</span>.</p>
+    </div>
+
+    <div class="row g-4">
+        
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm glass-card">
+                <div class="card-body">
+                    <h4 class="card-title text-success mb-4 text-center">🎤 Top Artists</h4>
+                    {% if top_artists %}
+                    <div class="list-group list-group-flush rounded-3 overflow-hidden">
+                        {% for artist in top_artists %}
+                        <div class="list-group-item d-flex justify-content-between align-items-center mb-2 shadow-sm border-0">
+                            <span class="fw-bold text-dark">{{ artist.stage_name }}</span>
+                            <span class="badge bg-success rounded-pill px-3">{{ artist.num_songs }} songs</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-person-x display-4 text-white-50"></i>
+                        <p class="text-white mt-2">No artists found.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm glass-card">
+                <div class="card-body">
+                    <h4 class="card-title text-success mb-4 text-center">❤️ Recent Activity</h4>
+                    {% if recent_purchases %}
+                    <div class="list-group list-group-flush rounded-3 overflow-hidden">
+                        {% for purchase in recent_purchases %}
+                        <div class="list-group-item mb-2 shadow-sm border-0">
+                            <div class="small text-muted">User: <strong>{{ purchase.buyer.username }}</strong></div>
+                            <div class="text-dark">Bought <i>{{ purchase.song.title }}</i></div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-cart-x display-4 text-white-50"></i>
+                        <p class="text-white mt-2">No recent activity.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm glass-card">
+                <div class="card-body">
+                    <h4 class="card-title text-success mb-4 text-center">🔁 Most Downloaded</h4>
+                    {% if top_downloaded %}
+                    <div class="list-group list-group-flush rounded-3 overflow-hidden">
+                        {% for song in top_downloaded %}
+                        <div class="list-group-item d-flex justify-content-between align-items-center mb-2 shadow-sm border-0">
+                            <span class="text-dark fw-semibold">{{ song.title }}</span>
+                            <span class="badge bg-primary rounded-pill px-3">{{ song.total_sales }} sales</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-music-note-beamed display-4 text-white-50"></i>
+                        <p class="text-white mt-2">No data available.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="{% url 'finance:report' %}" class="btn btn-success me-2 rounded-pill px-5 py-2 fw-bold shadow">
+            <i class="bi bi-currency-dollar"></i> Laporan Keuangan
+        </a>
+        <a href="{% url 'admin_app:admin_logout' %}" class="btn btn-danger rounded-pill px-5 py-2 fw-bold shadow">
+            <i class="bi bi-box-arrow-left"></i> Logout
+        </a>
+    </div>
+</div>
+
+<style>
+    /* Gradient Background */
+    body {
+        background: linear-gradient(135deg, #afd7c0, #b4d6f3);
+        background-attachment: fixed;
+        min-height: 100vh;
+    }
+
+    /* Glassmorphism Effect for Cards */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.25) !important;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        border-radius: 20px !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .glass-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+    }
+
+    /* List Item Styling */
+    .list-group-item {
+        background: rgba(255, 255, 255, 0.8) !important;
+        border-radius: 12px !important;
+        margin-bottom: 8px;
+        border: none !important;
+        transition: background 0.2s;
+    }
+
+    .list-group-item:hover {
+        background: rgba(255, 255, 255, 1) !important;
+    }
+
+    .card-title {
+        font-weight: 800;
+        letter-spacing: 1px;
+    }
+
+    /* Custom Scrollbar for better UX (Optional) */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #1db954;
+        border-radius: 10px;
+    }
+</style>
+{% endblock %}

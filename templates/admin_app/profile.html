@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow" style="background-color: rgba(29, 185, 84, 0.15); border-radius: 15px;">
+        <div class="card-body">
+          <h3 class="card-title text-success text-center mb-4">Profil Pengguna</h3>
+
+          <p><strong>Username:</strong> {{ user.username }}</p>
+          <p><strong>Email:</strong> {{ user.email }}</p>
+
+          <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="display_name" class="form-label">Display name:</label>
+              <input type="text" class="form-control" id="display_name" name="display_name" value="{{ user.profile.display_name }}">
+            </div>
+
+            <div class="mb-3">
+              <label for="bio" class="form-label">Bio:</label>
+              <textarea class="form-control" id="bio" name="bio" rows="3">{{ user.profile.bio }}</textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="profile_picture" class="form-label">Profile picture url:</label>
+              <input type="text" class="form-control" id="profile_picture" name="profile_picture" value="{{ user.profile.profile_picture }}">
+            </div>
+
+            <button type="submit" class="btn btn-success w-100 fw-bold">Simpan Profil</button>
+          </form>
+
+          <div class="mt-4 d-flex justify-content-between">
+            <a href="{% url 'home' %}" class="btn btn-outline-dark">← Kembali ke Home</a>
+            <a href="{% url 'user:logout' %}" class="btn btn-danger">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

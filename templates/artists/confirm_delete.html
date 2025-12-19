@@ -1,0 +1,38 @@
+{% extends 'artists/base_artist.html' %}
+{% load static %}
+
+{% block title %}Konfirmasi Hapus{% endblock title %}
+
+{% block content %}
+<h1>Hapus Lagu: "{{ song.title }}"</h1>
+
+<div class="card" style="max-width: 500px; margin: 0 auto; text-align: center; padding: 40px;">
+
+    <i class="fas fa-exclamation-triangle" style="font-size: 3em; color: var(--color-danger); margin-bottom: 20px;"></i>
+
+    <h2>Apakah Anda Yakin?</h2>
+
+    <p style="font-size: 1.1em; margin-bottom: 30px; color: var(--text-light);">
+        Anda akan menghapus lagu "{{ song.title }}" secara permanen.
+        Aksi ini tidak dapat dibatalkan.
+    </p>
+
+    <form method="post" action="{% url 'artists:delete' song.id %}">
+        {% csrf_token %}
+
+        <div class="form-actions" style="display: flex; justify-content: space-around; gap: 15px;">
+            <button type="submit" class="btn btn-danger">
+                Ya, Hapus Lagu Ini
+            </button>
+
+            <a href="{% url 'artists:dashboard' %}" class="btn btn-link-custom">
+                Batal
+            </a>
+        </div>
+    </form>
+</div>
+
+<div style="text-align: center; margin-top: 20px; color: var(--text-light);">
+    <p>Judul: {{ song.title }} | ID: {{ song.id }}</p>
+</div>
+{% endblock content %}

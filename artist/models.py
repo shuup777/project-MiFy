@@ -2,13 +2,15 @@ from decimal import Decimal
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
-
-User = settings.AUTH_USER_MODEL
+from decimal import Decimal
+from django.db import models
+from django.db.models import F
 
 class Artist(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     stage_name = models.CharField(max_length=120)
     bio = models.TextField(blank=True)
+    photo = models.ImageField(upload_to='artist_photos/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -16,20 +18,37 @@ class Artist(models.Model):
 
 
 class Song(models.Model):
-    # basic song / product model
-    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="songs")
+    # relasi ke artis
+    title = models.CharField(max_length=200)
+    cover_image = models.ImageField(upload_to='covers/')
+    artist = models.ForeignKey(
+        Artist,
+        on_delete=models.CASCADE,
+        related_name="songs"
+    )
+    
+
+    # informasi utama lagu
     title = models.CharField(max_length=255)
+
     audio_file = models.FileField(upload_to="songs/")
-    cover_image = models.ImageField(upload_to="song_covers/", null=True, blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
+    cover_image = models.ImageField(
+        upload_to="song_covers/",
+        null=True,
+        blank=True
+    )
+
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=Decimal("0.00")
+    )
+
     upload_date = models.DateTimeField(auto_now_add=True)
 
-    # engagement & sales counters
+    # statistik
     play_count = models.PositiveIntegerField(default=0)
     purchase_count = models.PositiveIntegerField(default=0)
-
-    # optional metadata
-    duration_seconds = models.PositiveIntegerField(null=True, blank=True)
 
     class Meta:
         ordering = ["-upload_date"]
@@ -40,24 +59,20 @@ class Song(models.Model):
     def __str__(self):
         return f"{self.title} — {self.artist.stage_name}"
 
-    def increment_play(self, save=True):
-        self.play_count = models.F('play_count') + 1
-        if save:
-            # use F() then refresh to avoid race conditions in high concurrency
-            self.save(update_fields=['play_count'])
-            self.refresh_from_db(fields=['play_count'])
+    def increment_play(self):
+        Song.objects.filter(pk=self.pk).update(
+            play_count=F("play_count") + 1
+        )
 
-    def increment_purchase(self, amount=None, save=True):
-        # increase counter and optionally record income elsewhere
-        self.purchase_count = models.F('purchase_count') + 1
-        if save:
-            self.save(update_fields=['purchase_count'])
-            self.refresh_from_db(fields=['purchase_count'])
+    def increment_purchase(self):
+        Song.objects.filter(pk=self.pk).update(
+            purchase_count=F("purchase_count") + 1
+        )
 
 
 class SongPurchase(models.Model):
     song = models.ForeignKey(Song, on_delete=models.CASCADE, related_name="purchases")
-    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="song_purchases")
+    buyer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="song_purchases")
     purchase_date = models.DateTimeField(default=timezone.now)
     price_paid = models.DecimalField(max_digits=10, decimal_places=2)
 

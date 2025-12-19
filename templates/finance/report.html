@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Laporan Keuangan{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4 min-vh-100 main-gradient">
+    <div class="container">
+        
+        <div class="text-center mb-4">
+            <h2 class="fw-bold text-white bg-dark bg-opacity-25 d-inline-block px-5 py-2 rounded-pill shadow-sm">
+                📊 Laporan Penjualan
+            </h2>
+        </div>
+
+        <div class="row mb-4 justify-content-center">
+            <div class="col-md-5 mb-2">
+                <div class="card glass-card border-0 shadow-sm text-center py-3">
+                    <small class="text-success fw-bold text-uppercase" style="letter-spacing: 1px;">Total Transaksi</small>
+                    <h2 class="fw-bold mb-0 text-dark">{{ payments.paginator.count|default:payments.count }}</h2>
+                </div>
+            </div>
+            <div class="col-md-5 mb-2">
+                <div class="card glass-card border-0 shadow-sm text-center py-3">
+                    <small class="text-success fw-bold text-uppercase" style="letter-spacing: 1px;">Total Pendapatan</small>
+                    <h2 class="fw-bold mb-0 text-dark">Rp{{ total_revenue|intcomma }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="card glass-card border-0 shadow-lg overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-white bg-opacity-50">
+                        <tr class="text-dark fw-bold" style="font-size: 1rem;">
+                            <th style="width: 10%;" class="ps-4">ID</th>
+                            <th style="width: 25%;">TANGGAL & WAKTU</th>
+                            <th style="width: 15%;">PEMBELI</th>
+                            <th style="width: 30%;">JUDUL LAGU</th>
+                            <th style="width: 20%; padding-right: 65px !important;" class="text-end">NOMINAL</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white bg-opacity-70">
+                        {% for p in payments %}
+                        <tr style="font-size: 1.1rem; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                            <td class="ps-4 text-muted fw-bold">#{{ p.id }}</td>
+                            <td class="text-dark">
+                                <span class="fw-semibold">{{ p.transaction_date|date:"d M Y" }}</span>
+                                <br>
+                                <small class="text-muted" style="font-size: 0.85rem;">Pukul {{ p.transaction_date|date:"H:i" }} WIB</small>
+                            </td>
+                            <td>
+                                <span class="badge bg-dark rounded-pill px-3 py-2 shadow-sm">{{ p.user.username }}</span>
+                            </td>
+                            <td>
+                                <div class="fw-bold text-dark fs-5">{{ p.song.title }}</div>
+                                <div class="text-success fw-semibold small">{{ p.song.artist.stage_name }}</div>
+                            </td>
+                            <td class="text-end pe-5 fw-bold text-success fs-4">
+                                Rp{{ p.amount|intcomma }}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-5 fs-5 text-muted">Belum ada transaksi terekam.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="d-flex flex-column align-items-center mt-5 pb-5">
+            {% if payments.has_other_pages %}
+            <nav class="mb-4">
+                <ul class="pagination pagination-lg shadow-sm">
+                    {% if payments.has_previous %}
+                    <li class="page-item"><a class="page-link text-success border-0 px-3" href="?page={{ payments.previous_page_number }}"><b>&laquo; Prev</b></a></li>
+                    {% endif %}
+                    
+                    <li class="page-item active">
+                        <span class="page-link bg-success border-0 px-4 fw-bold">Halaman {{ payments.number }}</span>
+                    </li>
+                    
+                    {% if payments.has_next %}
+                    <li class="page-item"><a class="page-link text-success border-0 px-3" href="?page={{ payments.next_page_number }}"><b>Next &raquo;</b></a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+            <a href="{% url 'admin_app:admin_dashboard' %}" class="btn btn-dark btn-lg rounded-pill px-5 fw-bold shadow-lg mt-2 py-3">
+                 KEMBALI KE DASHBOARD
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .main-gradient { 
+        background: linear-gradient(135deg, #afd7c0, #b4d6f3); 
+        background-attachment: fixed; 
+    }
+    .glass-card { 
+        background: rgba(255, 255, 255, 0.45) !important; 
+        backdrop-filter: blur(12px); 
+        border-radius: 20px !important; 
+        border: 1px solid rgba(255,255,255,0.6) !important; 
+    }
+    
+    /* Spasi baris yang lega agar teks besar tidak berhimpitan */
+    .table td { 
+        padding-top: 22px !important; 
+        padding-bottom: 22px !important; 
+    }
+    
+    .table thead th {
+        padding: 18px 10px !important;
+        background-color: rgba(255,255,255,0.3);
+        border-top: none;
+        letter-spacing: 0.5px;
+    }
+
+    /* Memperbaiki tampilan tombol halaman */
+    .page-link {
+        margin: 0 5px;
+        border-radius: 12px !important;
+        background: white !important;
+        transition: 0.3s;
+    }
+    .page-link:hover {
+        background: #f8f9fa !important;
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}

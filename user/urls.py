@@ -13,7 +13,7 @@ urlpatterns = [
     path('home/', views.home_view, name='home'),
     path('profile/', views.profile_view, name='profile'),
     path('notifications/', views.notifications_view, name='notifications'),
+    path('library/', views.library_view, name='library'),
     
-    # Action (Upgrade)
-    path('upgrade/', views.upgrade_subscription_view, name='upgrade'),
+   
 ]

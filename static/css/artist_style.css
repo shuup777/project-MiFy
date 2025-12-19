@@ -1,0 +1,1394 @@
+/* Warna dasar Spotify */
+:root {
+    --bg-dark: #121212;
+    /* Latar belakang utama */
+    --bg-card: #181818;
+    /* Latar belakang sidebar/card */
+    --text-white: #ffffff;
+    --text-light: #b3b3b3;
+    --primary-green: #1db954;
+    /* Hijau ikon/tombol utama */
+    --hover-card: #282828;
+    --border-color: #3e3e3e;
+    --error-red: #e53e3e;
+    --success-green: #38a169;
+}
+
+body {
+    font-family: 'Circular Std', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    min-height: 100vh;
+}
+
+/* --- I. DASHBOARD & STRUKTUR UTAMA --- */
+header {
+    background-color: var(--bg-dark);
+    border-bottom: 1px solid var(--border-color);
+    padding: 16px 32px;
+}
+
+header .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .brand {
+    font-size: 1.4em;
+    font-weight: 800;
+    color: var(--text-white);
+    text-decoration: none;
+}
+
+.artist-dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 250px;
+    z-index: 1000;
+    background-color: var(--bg-card);
+    padding: 20px 0;
+    flex-shrink: 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.sidebar h2 {
+    color: var(--text-white);
+    padding: 0 20px;
+    margin-bottom: 25px;
+    font-size: 1.5em;
+    font-weight: 700;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s, background-color 0.2s;
+}
+
+.sidebar ul li a i {
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li.active a {
+    color: var(--text-white);
+    background-color: var(--hover-card);
+}
+
+/* Logout Section */
+.logout-section {
+    margin-top: 20px;
+    padding: 0 20px;
+}
+
+.logout-section a {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.logout-section a i {
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+.logout-section a:hover {
+    color: var(--text-white);
+}
+
+/* Konten Utama */
+.main-content {
+    flex: 1;
+    width: 100%;
+    margin-left: 250px;
+    position: relative;
+    padding: 40px;
+    /* JARAK DALAM */
+    box-sizing: border-box;
+    z-index: 1;
+}
+
+.main-content h1 {
+    font-size: 2.5em;
+    font-weight: 900;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+/* Card Styling (Dashboard Metrics) */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.card {
+    background-color: var(--bg-card);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    background-color: var(--hover-card);
+}
+
+.card h3 {
+    color: var(--text-light);
+    font-size: 1em;
+    margin-top: 0;
+}
+
+.card p.metric {
+    font-size: 2.5em;
+    font-weight: 900;
+    margin: 5px 0 0;
+    color: var(--primary-green);
+}
+
+/* Tombol Dasar */
+.btn-primary {
+    background-color: var(--primary-green);
+    color: var(--bg-dark);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 500px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #1ed760;
+}
+
+/* Tabel */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    color: var(--text-light);
+}
+
+.data-table th,
+.data-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table th {
+    color: var(--text-white);
+    font-weight: 700;
+    font-size: 0.9em;
+    text-transform: uppercase;
+}
+
+.data-table tr:hover {
+    background-color: var(--hover-card);
+}
+
+/* Form Styling (Umum) */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-white);
+}
+
+.form-group input[type="text"],
+.form-group input[type="file"],
+.form-group input[type="number"],
+.form-group input[type="password"],
+/* Tambah password */
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-white);
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--primary-green);
+    outline: none;
+    background-color: var(--hover-card);
+}
+
+.form-group input[type="file"] {
+    padding: 10px 0;
+}
+
+.form-actions {
+    margin-top: 30px;
+}
+
+/* Messages */
+.messages {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.messages li {
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.messages .success,
+.messages .tag-success {
+    /* Added tag-success for django messages */
+    background-color: var(--success-green);
+    color: var(--text-white);
+}
+
+.messages .error,
+.messages .tag-error {
+    /* Added tag-error for django messages */
+    background-color: var(--error-red);
+    color: var(--text-white);
+}
+
+/* --- II. AUTH STYLING (LOGIN/REGISTER) --- */
+.auth-page header {
+    display: none;
+}
+
+.auth-page header .navbar {
+    justify-content: center;
+}
+
+.auth-page header .brand {
+    font-size: 1.6em;
+    font-weight: 900;
+    color: var(--primary-green);
+}
+
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-page main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-wrapper {
+    width: 100%;
+    max-width: 420px;
+    padding: 32px;
+    border-radius: 12px;
+    background: var(--bg-card);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+.auth-wrapper h2 {
+    font-size: 1.8em;
+    font-weight: 800;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.auth-wrapper .form-group label {
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-light);
+}
+
+/* Custom button for auth to maintain full width/shape */
+.btn-primary-auth {
+    width: 100%;
+    padding: 14px;
+    font-size: 1em;
+    margin-top: 10px;
+}
+
+.btn-primary-auth:hover {
+    background: #1ed760;
+}
+
+/* Link Style dalam Auth Wrapper */
+.btn-link-custom {
+    color: var(--text-light);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.btn-link-custom:hover {
+    color: var(--text-white);
+}
+
+.auth-wrapper input[type="text"],
+.auth-wrapper input[type="password"] {
+    background-color: #0f0f0f;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    font-size: 0.95em;
+}
+
+.auth-wrapper input:focus {
+    border-color: var(--primary-green);
+    background-color: #000;
+}
+
+/* Form control di auth (menggunakan style umum form-group input di atas) */
+.auth-wrapper p a {
+    color: var(--primary-green);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-wrapper p a:hover {
+    text-decoration: underline;
+}
+
+/* Field error text (register) */
+.form-text {
+    margin-top: 6px;
+    font-size: 0.75em;
+    line-height: 1.4;
+}
+
+.text-danger {
+    margin-top: 6px;
+    font-size: 0.75em;
+}
+
+/*UPLOAD SONG*/
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.upload-form {
+    width: 100%;
+    max-width: 520px;
+    background: linear-gradient(145deg, #1b1b1b, #121212);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.upload-form label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #e5e5e5;
+    margin-bottom: 6px;
+}
+
+.upload-form input[type="text"],
+.upload-form input[type="number"] {
+    width: 94%;
+    background-color: #0f0f0f;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: #fff;
+    font-size: 14px;
+    transition: all 0.25s ease;
+}
+
+.upload-form input::placeholder {
+    color: #777;
+}
+
+.upload-form input:focus {
+    outline: none;
+    border-color: #1db954;
+    box-shadow: 0 0 0 2px rgba(29, 185, 84, 0.25);
+}
+
+.upload-form input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #0f0f0f;
+    border: 1px dashed #333;
+    border-radius: 10px;
+    color: #aaa;
+    cursor: pointer;
+    transition: border-color 0.25s ease;
+}
+
+.upload-form input[type="file"]:hover {
+    border-color: #1db954;
+}
+
+.upload-form .form-group {
+    margin-bottom: 20px;
+}
+
+.custom-file-upload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px dashed #333;
+    background: #0f0f0f;
+    color: #bbb;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+.custom-file-upload i {
+    font-size: 18px;
+    color: #1db954;
+}
+
+.custom-file-upload:hover {
+    border-color: #1db954;
+    background: rgba(29, 185, 84, 0.05);
+    color: #fff;
+}
+
+.custom-file-upload input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/*PROFIL DAN EDIT PROFIL*/
+
+/* Avatar */
+.avatar-circle.large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #f2f2f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Upload */
+.upload-actions input[type="file"] {
+    display: none;
+}
+
+.upload-actions label.btn {
+    margin-bottom: 6px;
+    cursor: pointer;
+}
+
+.form-hint {
+    font-size: 12px;
+    color: #888;
+}
+
+
+.avatar-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #f1f1f1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-circle i {
+    font-size: 48px;
+    color: #999;
+}
+
+
+.profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Profile Header Section */
+.profile-header-section {
+    background: linear-gradient(135deg, var(--primary-green, #1db954), var(--primary-green-hover, #1aa34a));
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px rgba(29, 185, 84, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-header-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
+.profile-avatar {
+    flex-shrink: 0;
+}
+
+.avatar-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    backdrop-filter: blur(10px);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.artist-name {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.artist-email {
+    font-size: 1.1rem;
+    margin: 0 0 15px 0;
+    opacity: 0.9;
+}
+
+.profile-meta {
+    display: flex;
+    gap: 20px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    opacity: 0.9;
+}
+
+.profile-actions {
+    flex-shrink: 0;
+}
+
+.profile-actions .btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.profile-actions .btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Content Grid */
+.profile-content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+.profile-main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.profile-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Profile Cards */
+.profile-card {
+    background: var(--card-bg, #ffffff);
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-color, #e0e0e0);
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 24px 24px 0 24px;
+    margin-bottom: 20px;
+}
+
+.card-header h2,
+.card-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-primary, #333333);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-header h3 {
+    font-size: 1.1rem;
+}
+
+.card-content {
+    padding: 0 24px 24px 24px;
+}
+
+/* Bio Section */
+.bio-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-primary, #333333);
+    margin: 0;
+}
+
+.no-bio-placeholder {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-light, #666666);
+}
+
+.no-bio-placeholder i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+.no-bio-placeholder p {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+}
+
+.no-bio-placeholder small {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Statistics Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: var(--card-bg, #ffffff);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-color, #e0e0e0);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary-green, #1db954), var(--primary-green-hover, #1aa34a));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.stat-info {
+    flex: 1;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary, #333333);
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-light, #666666);
+    font-weight: 500;
+}
+
+/* Quick Actions */
+.quick-actions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.quick-action-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text-primary, #333333);
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.quick-action-item:hover {
+    background-color: var(--secondary-bg, #f8f9fa);
+    transform: translateX(4px);
+}
+
+.quick-action-item i {
+    width: 18px;
+    color: var(--primary-green, #1db954);
+}
+
+/* Activity */
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-item i {
+    color: var(--primary-green, #1db954);
+    width: 16px;
+}
+
+.activity-item span {
+    flex: 1;
+    font-weight: 500;
+}
+
+.activity-item small {
+    color: var(--text-light, #666666);
+    font-size: 0.8rem;
+}
+
+/* Buttons */
+.btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-green, #1db954), var(--primary-green-hover, #1aa34a));
+    color: white;
+    box-shadow: 0 2px 8px rgba(29, 185, 84, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(29, 185, 84, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .profile-content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-sidebar {
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 15px;
+    }
+
+    .profile-header-section {
+        padding: 25px;
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .avatar-circle {
+        width: 100px;
+        height: 100px;
+        font-size: 2.5rem;
+    }
+
+    .artist-name {
+        font-size: 2rem;
+    }
+
+    .profile-meta {
+        justify-content: center;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        padding: 20px;
+    }
+}
+
+/* FORM */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--text-primary, #333);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color, #e0e0e0);
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-green, #1db954);
+    box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.15);
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+/* IMAGE */
+.image-preview {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.image-preview img {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid var(--border-color, #e0e0e0);
+}
+
+.image-placeholder {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 2rem;
+}
+/* ============================= */
+/* EDIT SONG */
+/* ============================= */
+
+/* Hilangkan teks "Currently" dan "Change" */
+.clearable-file-input,
+.clearable-file-input p,
+.clearable-file-input br {
+    display: none !important;
+}
+
+/* Hilangkan checkbox Clear */
+input[type="checkbox"][name$="-clear"],
+label[for$="-clear"] {
+    display: none !important;
+}
+
+.edit-song-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+/* Card */
+.edit-song-form {
+    width: 100%;
+    max-width: 520px;
+    background: linear-gradient(145deg, #1b1b1b, #121212);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: #ffffff; /* 🔥 FORCE TEXT WHITE */
+}
+
+/* ============================= */
+/* Title */
+/* ============================= */
+
+.edit-song-title {
+    font-size: 1.8em;
+    font-weight: 800;
+    margin-bottom: 6px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.edit-song-subtitle {
+    font-size: 0.9em;
+    color: #b3b3b3;
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+/* ============================= */
+/* Cover preview */
+/* ============================= */
+
+.current-cover {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.current-cover label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.current-cover img {
+    width: 160px;
+    height: 160px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 1px solid #2a2a2a;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+
+.current-cover small {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.8em;
+    color: #9a9a9a;
+}
+
+/* ============================= */
+/* Form fields */
+/* ============================= */
+
+.edit-song-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    color: #ffffff;
+}
+
+.edit-song-form input[type="text"],
+.edit-song-form input[type="number"],
+.edit-song-form input[type="file"],
+.edit-song-form textarea,
+.edit-song-form select {
+    width: 100%;
+    background-color: #0f0f0f;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: #ffffff;
+    font-size: 14px;
+    transition: all 0.25s ease;
+}
+
+.edit-song-form input:focus,
+.edit-song-form textarea:focus,
+.edit-song-form select:focus {
+    outline: none;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 2px rgba(29, 185, 84, 0.25);
+}
+
+/* Placeholder */
+.edit-song-form ::placeholder {
+    color: #777;
+}
+
+/* Help & error */
+.edit-song-form small {
+    color: #9a9a9a;
+}
+
+.edit-song-form .errorlist li {
+    color: #ff5c5c;
+    font-size: 0.8em;
+}
+
+/* ============================= */
+/* Actions */
+/* ============================= */
+
+.edit-song-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+/* ============================= */
+/* Divider */
+/* ============================= */
+
+.edit-song-divider {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 32px 0 24px;
+}
+
+/* ============================= */
+/* Delete */
+/* ============================= */
+
+.delete-song-section {
+    text-align: center;
+}
+
+.delete-song-section p {
+    color: #b3b3b3;
+    margin-bottom: 12px;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #ff4d4d, #e63939);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 10px 22px;
+}
+
+.btn-danger:hover {
+    box-shadow: 0 6px 18px rgba(255, 77, 77, 0.35);
+}
+
+
+/* SONG LIST */
+
+.songs-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.songs-header {
+    margin-bottom: 30px;
+}
+
+.songs-header h1 {
+    font-size: 2.4em;
+    font-weight: 900;
+    margin-bottom: 6px;
+}
+
+.songs-header p {
+    color: var(--text-light);
+    font-size: 0.95em;
+}
+
+/* List */
+.song-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+/* Card */
+.song-card {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    background: linear-gradient(145deg, #1b1b1b, #121212);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.song-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+}
+
+/* Cover */
+.song-cover {
+    width: 90px;
+    height: 90px;
+    border-radius: 10px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Info */
+.song-info {
+    flex: 1;
+}
+
+.song-title {
+    font-size: 1.1em;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.song-meta {
+    font-size: 0.85em;
+    color: var(--text-light);
+    margin-bottom: 4px;
+}
+
+/* Actions */
+.song-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+}
+
+.song-actions .btn {
+    padding: 8px 16px;
+    font-size: 0.85em;
+}
+
+.cover-preview img {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 14px;
+    margin: 12px auto;
+    display: block;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+
+.custom-file-upload input[type="file"] {
+    display: none;
+}
+
+.divider {
+    margin: 32px 0;
+    border: none;
+    border-top: 1px solid var(--border-color);
+}
+
+.delete-section {
+    text-align: center;
+}
+
+.text-warning {
+    color: #ffb020;
+}
+
+/* Empty State */
+.empty-song {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-light);
+}
+
+.empty-song p {
+    font-size: 1.2em;
+    margin-bottom: 6px;
+}
+
+.total-row {
+    border-top: 2px solid var(--border-color);
+    font-weight: 700;
+}
+
+.text-green {
+    color: var(--primary-green);
+}
+
+.text-muted {
+    color: var(--text-light);
+}
+
+/* ============================= */
+/* FORCE TEXT WHITE - EDIT SONG */
+/* ============================= */
+
+.edit-song-form,
+.edit-song-form h1,
+.edit-song-form p,
+.edit-song-form label {
+    color: #ffffff;
+}
+
+/* Subtitle & helper text */
+.edit-song-subtitle,
+.edit-song-form small {
+    color: #b3b3b3;
+}
+
+/* Form input text */
+.edit-song-form input,
+.edit-song-form textarea,
+.edit-song-form select {
+    color: #ffffff;
+}
+
+/* Placeholder */
+.edit-song-form ::placeholder {
+    color: #777;
+}
+
+
+/* ===== IMAGE UPLOAD ===== */
+
+.image-group {
+    margin-bottom: 24px;
+}
+
+.image-upload-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.avatar-circle.large {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: #f1f1f1;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-circle.large i {
+    font-size: 42px;
+    color: #999;
+}
+
+.upload-actions input[type="file"] {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.form-hint {
+    font-size: 12px;
+    color: #888;
+}
+
+a[href^="/media/"],
+.file-upload,
+.clearable-file-input {
+    display: none;
+}

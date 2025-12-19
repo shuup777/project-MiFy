@@ -1,0 +1,59 @@
+{% extends 'artists/base_artist.html' %}
+{% load humanize %}
+
+{% block title %}Laporan Penjualan - {{ artist.stage_name }}{% endblock title %}
+
+{% block content %}
+<h1>Laporan Penjualan</h1>
+
+<div class="card-grid">
+    <div class="card">
+        <h3>Total Pendapatan</h3>
+        <p class="metric">Rp {{ total_income_sum|intcomma }}</p>
+    </div>
+    <div class="card">
+        <h3>Total Lagu Terjual</h3>
+        <p class="metric">{{ total_purchases_sum|intcomma }}</p>
+    </div>
+</div>
+
+<h2>Rincian Penjualan Per Lagu</h2>
+
+{% if report %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Judul Lagu</th>
+            <th>Plays</th>
+            <th>Purchases</th>
+            <th>Total Pendapatan</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in report %}
+        <tr>
+            <td>{{ item.song.title }}</td>
+            <td>{{ item.plays|intcomma }}</td>
+            <td>{{ item.purchases|intcomma }}</td>
+            <td class="text-green">
+                Rp {{ item.income|intcomma }}
+            </td>
+        </tr>
+        {% endfor %}
+
+        <!-- TOTAL ROW -->
+        <tr class="total-row">
+            <td>Total</td>
+            <td>{{ total_plays_sum|intcomma }}</td>
+            <td>{{ total_purchases_sum|intcomma }}</td>
+            <td class="text-green">
+                Rp {{ total_income_sum|intcomma }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% else %}
+<p class="text-muted">Belum ada data penjualan.</p>
+{% endif %}
+
+{% endblock content %}

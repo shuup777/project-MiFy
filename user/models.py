@@ -56,10 +56,18 @@ class UserProfile(models.Model):
 
 # --- 3. CLASS USER (INTI LOGIKA PENGHUBUNG) ---
 class User(AbstractUser):
-    # ... field relasi liked_songs, following dll ...
-    # points to `artist.Song` which exists in this project
+    # --- field yang sudah ada sebelumnya ---
     liked_songs = models.ManyToManyField('artist.Song', related_name='liked_by', blank=True)
 
+    # --- TAMBAHAN UNTUK ADMIN ---
+    is_admin = models.BooleanField(default=False)
+    ADMIN_ROLES = (
+        ('system', 'System Admin'),
+        ('finance', 'Finance Admin'),
+    )
+    admin_role = models.CharField(max_length=20, choices=ADMIN_ROLES, null=True, blank=True)
+
+    # --- property dan method yang sudah ada sebelumnya ---
     @property
     def subscription(self):
         # Polimorfisme: Mengembalikan objek anak (Free/Premium)

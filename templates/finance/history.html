@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    body { background-color: #121212; color: #ffffff; }
+    .history-container {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 20px;
+    }
+    .card-history {
+        background-color: #1e1e1e;
+        border: 1px solid #333;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .table { color: #ffffff; margin-bottom: 0; }
+    .table thead th {
+        background-color: #282828;
+        border-bottom: 2px solid #333;
+        color: #b3b3b3;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+    }
+    .table tbody tr { border-bottom: 1px solid #333; transition: 0.3s; }
+    .table tbody tr:hover { background-color: #282828; }
+    .text-success-spotify { color: #1DB954; font-weight: bold; }
+    .btn-play {
+        background-color: #1DB954;
+        color: white;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        padding: 5px 15px;
+        text-decoration: none;
+    }
+    .btn-play:hover { background-color: #1ed760; color: white; }
+</style>
+
+<div class="container history-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-clock-history me-2"></i>Riwayat Pembelian</h2>
+        <a href="{% url 'artists:song_list' %}" class="btn btn-outline-light btn-sm">Cari Lagu Lagi</a>
+    </div>
+
+    <div class="card-history">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Judul Lagu</th>
+                    <th>Harga</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                <tr>
+                    <td class="text-muted">{{ payment.transaction_date|date:"d M Y" }}</td>
+                    <td>
+                        <div class="fw-bold">{{ payment.song.title }}</div>
+                        <div class="small text-muted">{{ payment.song.artist.stage_name }}</div>
+                    </td>
+                    <td class="text-success-spotify">Rp{{ payment.amount }}</td>
+                    <td><span class="badge bg-success">Berhasil</span></td>
+                    <td>
+                        <a href="{% url 'artists:song_detail' payment.song.id %}" class="btn btn-play">
+                            <i class="bi bi-play-fill"></i> Putar
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-5 text-muted">
+                        <i class="bi bi-cart-x display-4 d-block mb-3"></i>
+                        Belum ada lagu yang dibeli.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

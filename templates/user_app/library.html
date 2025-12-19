@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}Koleksi Saya - Mify{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-white"><i class="bi bi-collection-play me-2 text-success"></i>Koleksi Lagu Saya</h2>
+        <a href="{% url 'user:home' %}" class="btn btn-outline-success rounded-pill px-4">
+            <i class="bi bi-plus-lg me-1"></i> Cari Lagu Lagi
+        </a>
+    </div>
+
+    {% if purchases %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for purchase in purchases %}
+            <div class="col">
+                <div class="card h-100 bg-dark text-white border-0 shadow-lg" style="border-radius: 20px; transition: transform 0.3s;">
+                    <div class="position-relative">
+                        {% if purchase.song.cover_image %}
+                            <img src="{{ purchase.song.cover_image.url }}" class="card-img-top" alt="{{ purchase.song.title }}" style="height: 250px; object-fit: cover; border-radius: 20px 20px 0 0;">
+                        {% else %}
+                            <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 250px; border-radius: 20px 20px 0 0;">
+                                <i class="bi bi-music-note-beamed display-1 text-white-50"></i>
+                            </div>
+                        {% endif %}
+                        <div class="position-absolute bottom-0 end-0 m-3">
+                            <span class="badge bg-success rounded-pill px-3 py-2 shadow"><i class="bi bi-patch-check-fill me-1"></i> Dimiliki</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold mb-1">{{ purchase.song.title }}</h5>
+                        <p class="text-success mb-3">{{ purchase.song.artist.stage_name }}</p>
+                        
+                        <hr class="border-secondary opacity-25">
+                        
+                        <div class="mt-3">
+                            <label class="small text-white-50 mb-2">Putar Sekarang:</label>
+                            <audio controls class="w-100 custom-audio-player">
+                                <source src="{{ purchase.song.audio_file.url }}" type="audio/mpeg">
+                                Browser Anda tidak mendukung pemutar audio.
+                            </audio>
+                        </div>
+                        
+                        <div class="mt-4 d-flex justify-content-between align-items-center">
+                            <small class="text-white-50">Dibeli pada: {{ purchase.purchase_date|date:"d M Y" }}</small>
+                            <a href="{% url 'artists:song_detail' purchase.song.id %}" class="btn btn-sm btn-link text-success p-0 text-decoration-none">Detail Lagu</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5 bg-dark rounded-4 shadow-sm border border-secondary border-dashed" style="border-style: dashed !important;">
+            <i class="bi bi- music-note-list display-1 text-white-50 mb-3"></i>
+            <h4 class="text-white">Belum Ada Koleksi</h4>
+            <p class="text-white-50 mb-4">Anda belum membeli lagu apapun. Mulai dukung artis favorit Anda!</p>
+            <a href="{% url 'user:home' %}" class="btn btn-success btn-lg rounded-pill px-5 fw-bold">Jelajahi Lagu</a>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .card:hover {
+        transform: translateY(-10px);
+    }
+    .custom-audio-player {
+        height: 35px;
+    }
+    .custom-audio-player::-webkit-media-controls-enclosure {
+        background-color: #198754; /* Warna hijau success */
+        border-radius: 10px;
+    }
+</style>
+{% endblock %}

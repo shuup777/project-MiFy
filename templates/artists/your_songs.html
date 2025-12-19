@@ -1,0 +1,59 @@
+{% extends 'artists/base_artist.html' %}
+{% load static %}
+
+{% block title %}Lagu Anda{% endblock title %}
+
+{% block content %}
+
+<h1 class="page-title">Lagu Anda</h1>
+
+<div class="songs-wrapper">
+    <div class="song-list">
+
+        {% for song in songs %}
+        <div class="song-card">
+
+            <!-- COVER -->
+            <a href="{% url 'artists:play' song.id %}">
+                {% if song.cover_image %}
+                <img src="{{ song.cover_image.url }}" alt="{{ song.title }}" class="song-cover">
+                {% else %}
+                <img src="{% static 'img/default-cover.jpg' %}" alt="Default Cover" class="song-cover">
+                {% endif %}
+            </a>
+
+            <!-- INFO -->
+            <div class="song-info">
+                <h3 class="song-title">
+                    {{ song.title }}
+                </h3>
+
+                {% if song.total_play %}
+                <p class="song-meta">
+                    ▶ {{ song.total_play }} kali diputar
+                </p>
+                {% endif %}
+
+                <!-- ACTIONS -->
+                <div class="song-actions">
+                    <a href="{% url 'artists:edit' song.id %}" class="btn btn-primary">
+                        Edit
+                    </a>
+                    <a href="{% url 'artists:delete' song.id %}" class="btn btn-danger">
+                        Hapus
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        {% empty %}
+        <div class="empty-song">
+            <p>🎵 Belum ada lagu yang diunggah</p>
+            <small>Mulai unggah lagu pertamamu sekarang</small>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock content %}

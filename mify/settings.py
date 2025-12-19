@@ -38,14 +38,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     # Local apps
     'artist',
     'finance',
     'user',
+    'admin_app',
 ]
 
 # Use the custom user model defined in `user.models.User`
 AUTH_USER_MODEL = 'user.User'
+
+# Authentication redirects
+LOGIN_URL = '/user/login/'
+LOGIN_REDIRECT_URL = '/user/home/'
+LOGOUT_REDIRECT_URL = '/'
 
 MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -125,10 +132,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 # Tell Django where to find project-level static files during development
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+STATICFILES_DIRS = [BASE_DIR / 'static'
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+LOGIN_REDIRECT_URL = 'finance:login_redirect'
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
